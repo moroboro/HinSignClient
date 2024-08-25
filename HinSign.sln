@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HinQesSignDemo", "HinQesSignDemo.csproj", "{A05AEB01-5370-4D6C-A4C1-C5B3F3EF3CFC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A05AEB01-5370-4D6C-A4C1-C5B3F3EF3CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A05AEB01-5370-4D6C-A4C1-C5B3F3EF3CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A05AEB01-5370-4D6C-A4C1-C5B3F3EF3CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A05AEB01-5370-4D6C-A4C1-C5B3F3EF3CFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
