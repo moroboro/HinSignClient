@@ -25,6 +25,8 @@ public interface ICertifactionClient
 
     Task<Uri?> QesSignFile(Stream file, string fileName, string hinSigningToken, string signatureLanguage,
         string email, Uri signCallbackUrl, CancellationToken cancellation = default);
+
+    Task<Stream?> DownloadFile(Uri requestUri, string hinSigningToken, CancellationToken cancellation = default);
 }
 
 public class CertifactionClient(HttpClient httpClient, ILogger<CertifactionClient> logger) : ICertifactionClient
@@ -192,12 +194,38 @@ public class CertifactionClient(HttpClient httpClient, ILogger<CertifactionClien
         }
     }
 
-    private void SetupHeaders(string token, string language)
+    public async Task<Stream?> DownloadFile(Uri requestUri, string hinSigningToken, CancellationToken cancellation = default)
+    {
+        try
+        {
+            SetupHeaders(hinSigningToken);
+
+            var encode = UrlEncoder.Default.Encode(requestUri.ToString());
+            var response = await httpClient.GetAsync(
+                new Uri($"download?file={encode}", UriKind.Relative), cancellation);
+            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStreamAsync(cancellation);
+
+            var error = await response.Content.ReadAsStringAsync(cancellation);
+            logger.LogError(error);
+
+            return null;
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or HttpRequestException or TaskCanceledException)
+        {
+            logger.LogError(ex, "Something went wrong");
+            return null;
+        }
+    }
+
+    private void SetupHeaders(string token, string? language = null)
     {
         httpClient.DefaultRequestHeaders.Clear();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         httpClient.DefaultRequestHeaders.AcceptLanguage.Clear();
-        httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue(language));
+        if (language is not null)
+        {
+            httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue(language));
+        }
     }
 }
 
